@@ -6,6 +6,8 @@ def dispatch(args, logger):
         "active": {}
     }
 
+    scan_result = {} 
+
     if args.dns:
         logger.info("Running DNS enumeration")
         from passive.dns import run_dns_enum
