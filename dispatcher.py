@@ -38,4 +38,27 @@ def dispatch(args, logger):
         )
         results["active"]["banners"] = banners
 
+        # Tech Detection only if ports found
+        from active.tech import identify_tech
+        tech_results = {}
+
+        # HTTP
+        tech_results["http"] = identify_tech(
+            args.domain,
+            port=80,
+            use_ssl=False,
+            logger=logger
+        )
+
+        # HTTPS
+        tech_results["https"] = identify_tech(
+            args.domain,
+            port=443,
+            use_ssl=True,
+            logger=logger
+        )
+
+        results["active"]["technology"] = tech_results
+
+
     return results

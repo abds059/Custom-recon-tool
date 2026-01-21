@@ -56,6 +56,18 @@ def _generate_txt(domain, results, path):
             for port, banner in banners.items():
                 f.write(f"  Port {port}: {banner}\n")
 
+        # Technology Detection
+        tech = active.get("technology")
+        if tech:
+            f.write("\nTechnology Detection:\n")
+            for proto, info in tech.items():
+                f.write(f"  [{proto.upper()}]\n")
+                if info:
+                    for line in str(info).splitlines():
+                        f.write(f"    {line}\n")
+                else:
+                    f.write("    No data found\n")
+
 
 def _generate_json(results, path):
     import json
@@ -121,6 +133,7 @@ li {{
 <h2>Passive Recon</h2>
 """)
 
+        # Passive recon blocks
         for module, data in passive.items():
             f.write(f"""
 <div class="box">
@@ -131,10 +144,12 @@ li {{
 
         f.write("""
 </div>
+
 <div class="section">
 <h2>Active Recon</h2>
 """)
 
+        # Port scan
         portscan = active.get("portscan")
         if portscan:
             f.write("""
@@ -146,6 +161,7 @@ li {{
                 f.write(f"<li>Port {esc(port)}</li>")
             f.write("</ul></div>")
 
+        # Banners
         banners = active.get("banners")
         if banners:
             f.write("""
@@ -157,7 +173,21 @@ li {{
                 f.write(f"Port {esc(port)}: {esc(banner)}\n")
             f.write("</pre></div>")
 
-        f.write(f"""
+        # Technology Detection 
+        tech = active.get("technology")
+        if tech:
+            f.write("""
+<div class="box">
+<h3>Technology Detection</h3>
+""")
+            for proto, info in tech.items():
+                f.write(f"""
+<h4>{esc(proto.upper())}</h4>
+<pre>{esc(info) if info else "No data found"}</pre>
+""")
+            f.write("</div>")
+
+        f.write("""
 </div>
 
 <div class="footer">
