@@ -27,13 +27,13 @@ def dispatch(args, logger):
         scan_result = run_port_scan(args.domain, logger)
         results["active"]["portscan"] = scan_result
 
-    # Banner grabbing only if ports found
-    from active.banner import run_banner_grab
-    banners = run_banner_grab(
-        args.domain,
-        scan_result.get("open_ports", []),
-        logger
-    )
-    results["active"]["banners"] = banners
+        # Banner grabbing only if ports found
+        from active.banner import run_banner_grab
+        banners = run_banner_grab(
+            args.domain,
+            scan_result.get("open_ports", []),
+            logger
+        )
+        results["active"]["banners"] = banners
 
     return results
