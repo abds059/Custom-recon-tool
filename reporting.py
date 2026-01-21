@@ -5,6 +5,8 @@ import html
 
 def generate_reports(domain, results, output_dir, logger=None):
     output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     txt_path = output_dir / f"{domain}_{timestamp}.txt"
@@ -30,7 +32,10 @@ def _generate_txt(domain, results, path):
         passive = results.get("passive", {})
         for module, data in passive.items():
             f.write(f"\n{module.upper()}:\n")
-            f.write(str(data) + "\n")
+            if not data:
+                f.write("  No data found\n")
+            else:
+                f.write(str(data) + "\n")
 
         # Active Recon
         f.write("\n[ACTIVE RECON]\n")
@@ -120,7 +125,7 @@ li {{
             f.write(f"""
 <div class="box">
 <h3>{esc(module.upper())}</h3>
-<pre>{esc(json.dumps(data, indent=2))}</pre>
+<pre>{esc(json.dumps(data, default=str))}</pre>
 </div>
 """)
 
